@@ -1,0 +1,10 @@
+{
+  "projectId": "smart-disaster-manager",
+  "appId": "1:635550788631:web:e2326cf734060a73f2c052",
+  "apiKey": "AIzaSyDGcqbYlY_vIRHZLSn4JlC-2zb1_ZvnIXU",
+  "authDomain": "smart-disaster-manager.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "smart-disaster-manager.firebasestorage.app",
+  "messagingSenderId": "635550788631",
+  "measurementId": ""
+}

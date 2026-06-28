@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: disaster-intelligence-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ALLOWED_ORIGINS
+        value: "https://smart-relic-z2fsp.firebaseapp.com,https://smart-relic-z2fsp.web.app,http://localhost:5173"
+      - key: GEMINI_API_KEY
+        sync: false

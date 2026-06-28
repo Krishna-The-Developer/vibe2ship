@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    match /tasks/{taskId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+
+    match /insights/{insightId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+
+    match /disasters/{disasterId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+
+    match /analysis_results/{resultId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+
+    match /alerts/{alertId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+
+    match /situation_reports/{reportId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+
+    match /chat_sessions/{sessionId} {
+      allow create: if isAuthenticated();
+      allow get, list, update, delete: if isAuthenticated();
+    }
+  }
+}

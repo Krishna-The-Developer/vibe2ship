@@ -1,0 +1,149 @@
+{
+  "entities": {
+    "Task": {
+      "title": "Task",
+      "description": "A scheduled or pending emergency recovery or standard management task",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Name of the task" },
+        "description": { "type": "string", "description": "Task details" },
+        "deadline": { "type": "string", "format": "date-time", "description": "Due timestamp" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "panic"], "description": "Priority tier" },
+        "duration": { "type": "integer", "description": "Estimated duration in minutes" },
+        "completed": { "type": "boolean", "description": "Task completion state" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["title", "priority", "completed", "userId"]
+    },
+    "Insight": {
+      "title": "Insight",
+      "description": "An AI-generated daily productivity or safety metric assessment",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string", "description": "Insight content text" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["text", "userId"]
+    },
+    "Disaster": {
+      "title": "Disaster",
+      "description": "An active disaster tracked in the geospatial system",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Name of the disaster event" },
+        "type": { "type": "string", "enum": ["earthquake", "hurricane", "flood", "wildfire", "tsunami"], "description": "Disaster category" },
+        "magnitude": { "type": "number", "description": "Disaster magnitude (0.0 to 10.0)" },
+        "depth_km": { "type": "number", "description": "Hypocenter depth in km (for earthquakes)" },
+        "population_affected": { "type": "integer", "description": "Total population affected" },
+        "damaged_critical": { "type": "integer", "description": "Number of critical infrastructure facilities damaged" },
+        "total_critical": { "type": "integer", "description": "Total number of critical infrastructure facilities in zone" },
+        "status": { "type": "string", "enum": ["active", "monitored", "resolved"], "description": "Tracking status" },
+        "total_score": { "type": "number", "description": "Composite geospatial risk score" },
+        "severity_label": { "type": "string", "description": "Severity description label" },
+        "recommended_response_level": { "type": "integer", "description": "Response tier level (1 to 5)" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last updated timestamp" }
+      },
+      "required": ["title", "type", "magnitude", "status", "userId"]
+    },
+    "AnalysisResult": {
+      "title": "AnalysisResult",
+      "description": "Composite risk assessment details saved from calculations",
+      "type": "object",
+      "properties": {
+        "disasterId": { "type": "string", "description": "ID of associated disaster" },
+        "total_score": { "type": "number", "description": "Composite calculated score" },
+        "severity_label": { "type": "string", "description": "Label such as Critical, Catastrophic" },
+        "recommended_response_level": { "type": "integer", "description": "Response level 1-5" },
+        "breakdown": { "type": "object", "description": "Detailed breakdowns" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Calculation timestamp" }
+      },
+      "required": ["disasterId", "total_score", "severity_label", "userId"]
+    },
+    "Alert": {
+      "title": "Alert",
+      "description": "An emergency alert generated for disaster events",
+      "type": "object",
+      "properties": {
+        "disasterId": { "type": "string", "description": "Associated disaster ID" },
+        "disasterTitle": { "type": "string", "description": "Title of the disaster" },
+        "disasterType": { "type": "string", "description": "Type of the disaster" },
+        "severity": { "type": "string", "enum": ["info", "moderate", "high", "critical", "emergency"], "description": "Alert severity" },
+        "headline": { "type": "string", "description": "Headline text" },
+        "summary": { "type": "string", "description": "Detailed summary" },
+        "affectedArea": { "type": "string", "description": "Affected area description" },
+        "recommendedActions": { "type": "array", "description": "Actions to take" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "issuedAt": { "type": "string", "format": "date-time", "description": "Issue timestamp" },
+        "expiresAt": { "type": "string", "format": "date-time", "description": "Expiration timestamp" },
+        "acknowledged": { "type": "boolean", "description": "Acknowledgment status" }
+      },
+      "required": ["disasterId", "disasterTitle", "severity", "headline", "summary", "userId"]
+    },
+    "SituationReport": {
+      "title": "SituationReport",
+      "description": "An emergency management situation report (SitRep) in markdown format",
+      "type": "object",
+      "properties": {
+        "disasterId": { "type": "string", "description": "Associated disaster ID" },
+        "disasterTitle": { "type": "string", "description": "Title of the disaster" },
+        "title": { "type": "string", "description": "Title of the report" },
+        "content": { "type": "string", "description": "Markdown formatted SitRep body" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "riskScore": { "type": "number", "description": "Risk score at time of generation" },
+        "affectedPopulation": { "type": "integer", "description": "Affected population" },
+        "damagedFacilities": { "type": "integer", "description": "Damaged facilities count" },
+        "totalFacilities": { "type": "integer", "description": "Total critical facilities count" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["disasterId", "disasterTitle", "title", "content", "userId"]
+    },
+    "ChatSession": {
+      "title": "ChatSession",
+      "description": "An AI Command Center multi-turn chat session with custom context and history",
+      "type": "object",
+      "properties": {
+        "disasterId": { "type": "string", "description": "ID of associated disaster" },
+        "userId": { "type": "string", "description": "Auth user ID of the owner" },
+        "messages": { "type": "array", "description": "List of conversation messages" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last updated timestamp" }
+      },
+      "required": ["disasterId", "userId", "messages"]
+    }
+  },
+  "firestore": {
+    "/chat_sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/ChatSession" },
+      "description": "Conversation sessions for the AI Command Center"
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "User scheduled and emergency priority tasks"
+    },
+    "/insights/{insightId}": {
+      "schema": { "$ref": "#/entities/Insight" },
+      "description": "AI dynamic motivation insights and alerts"
+    },
+    "/disasters/{disasterId}": {
+      "schema": { "$ref": "#/entities/Disaster" },
+      "description": "User-managed custom or real-time synchronized disasters"
+    },
+    "/analysis_results/{resultId}": {
+      "schema": { "$ref": "#/entities/AnalysisResult" },
+      "description": "Risk matrix calculation outputs"
+    },
+    "/alerts/{alertId}": {
+      "schema": { "$ref": "#/entities/Alert" },
+      "description": "Emergency alerts generated from disasters"
+    },
+    "/situation_reports/{reportId}": {
+      "schema": { "$ref": "#/entities/SituationReport" },
+      "description": "A structured Markdown situation report"
+    }
+  }
+}
