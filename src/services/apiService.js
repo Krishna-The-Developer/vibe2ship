@@ -1,50 +1,57 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+const BASE = import.meta.env.VITE_API_BASE_URL
+  ?? "http://localhost:8000";
 
-// List of public endpoints that do not require authentication headers
-const PUBLIC_ENDPOINTS = [
-  '/api/tasks/urgent-tasks',
-  '/api/tasks/urgent',
-  '/health',
-  '/'
-];
+async function apiFetch(path, options = {}) {
+  const url = `${BASE}${path}`;
 
-function isPublicEndpoint(endpoint) {
-  return PUBLIC_ENDPOINTS.some(pub => endpoint === pub || endpoint.startsWith(pub + '/'));
-}
-
-export async function apiFetch(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  const headers = {
-    'Content-Type': 'application/json',
-    ...options.headers,
-  };
-
-  // Only append Authorization header if the endpoint is NOT public
-  if (!isPublicEndpoint(endpoint)) {
-    const token = localStorage.getItem('token') || 'mock-auth-token-123';
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-  }
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(), 10000
+  );
 
   try {
-    const response = await fetch(url, {
+    const res = await fetch(url, {
       ...options,
-      headers,
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers ?? {}),
+      },
     });
+    clearTimeout(timer);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (!res.ok) {
+      throw new Error(
+        `HTTP error! status: ${res.status}`
+      );
     }
 
-    return await response.json();
-  } catch (error) {
-    console.error(`apiFetch failed for ${endpoint}:`, error);
-    throw error;
+    return await res.json();
+
+  } catch (err) {
+    clearTimeout(timer);
+    if (err.name === "AbortError") {
+      throw new Error(`Timeout: ${path}`);
+    }
+    console.error(
+      `[apiFetch] failed for ${path}:`, err.message
+    );
+    throw err;
   }
 }
 
-export async function getUrgentTasks() {
-  return apiFetch('/api/tasks/urgent-tasks');
-}
+export const api = {
+  get:  (path)       => apiFetch(path),
+  post: (path, body) => apiFetch(path, {
+    method: "POST",
+    body: JSON.stringify(body),
+  }),
+  getUrgentTasks:  () =>
+    api.get("/api/disasters/urgent-tasks"),
+  getEarthquakes:  () =>
+    api.get("/api/disasters/earthquakes"),
+  getHealth:       () =>
+    api.get("/health"),
+  analyzeDisaster: (d) =>
+    api.post("/api/ai/analyze", d),
+};

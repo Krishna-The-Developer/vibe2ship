@@ -1,4 +1,6 @@
 import os
+import json
+from datetime import datetime
 from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 
@@ -786,7 +788,12 @@ The next official situation report (SitRep #{report_num + 1}) will be generated 
         """
 
         if current_analysis:
-            situation_context += f"\nActive Operational Analysis Context:\n{json.dumps(current_analysis, indent=2)}"
+            analysis_dict = current_analysis
+            if hasattr(current_analysis, "model_dump"):
+                analysis_dict = current_analysis.model_dump()
+            elif hasattr(current_analysis, "dict"):
+                analysis_dict = current_analysis.dict()
+            situation_context += f"\nActive Operational Analysis Context:\n{json.dumps(analysis_dict, indent=2)}"
 
         system_instruction = (
             "You are DIEP-AI Predictive Analyst, a leading emergency meteorology and geospatial risk forecaster. "
