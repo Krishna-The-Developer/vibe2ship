@@ -16,25 +16,22 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# 1. CORS Configuration - Added FIRST before any routers or other middlewares
-allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173")
-origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
-# Ensure localhost:3000 and localhost:5173 are always included
-for default_origin in ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"]:
-    if default_origin not in origins:
-        origins.append(default_origin)
+# 1. Custom Authentication Middleware - Skips all routes in PUBLIC_ROUTES
+from middleware.auth import AuthMiddleware
+app.add_middleware(AuthMiddleware)
 
+# 2. CORS Configuration - Added LAST so it's the outermost middleware and executes first
+# This ensures that OPTIONS requests return 200 OK without hitting AuthMiddleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "http://localhost:5173",
+        "https://YOUR-VERCEL-DOMAIN.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# 2. Custom Authentication Middleware - Skips all routes in PUBLIC_ROUTES
-from middleware.auth import AuthMiddleware
-app.add_middleware(AuthMiddleware)
 
 # Import and Mount Routers
 from routers.tasks import router as tasks_router

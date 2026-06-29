@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 from enum import Enum
 
@@ -30,9 +30,8 @@ class SubtaskUpdate(BaseModel):
 
 class SubtaskResponse(SubtaskBase):
     id: str = Field(..., description="Unique subtask identifier (UUID or short ID)")
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -64,8 +63,7 @@ class TaskResponse(TaskBase):
     subtasks: List[SubtaskResponse] = Field(default=[], description="List of related micro-steps")
     created_at: datetime = Field(default_factory=datetime.utcnow, description="Timestamp when created")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -83,8 +81,7 @@ class InsightResponse(InsightBase):
     stress_advice: str = Field(..., description="AI-generated stress-reduction advice or coping steps")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Time of diagnostics check")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -112,8 +109,7 @@ class ScheduleResponse(ScheduleBase):
     id: str = Field(..., description="Unique timeline block identifier")
     completed: bool = Field(default=False, description="Completion status of block")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -325,8 +321,8 @@ class SituationReportRequest(BaseModel):
     total_critical_facilities: int = Field(..., description="Total critical facilities")
     risk_score: float = Field(..., description="Geospatial risk score")
     resources: Optional[List[Dict[str, Any]]] = Field(default=None, description="Current resource list")
-    situation_analysis: Optional[Dict[str, Any]] = Field(default=None, description="Optional AI situation analysis context")
-    previous_reports: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional list of previous reports for delta tracking")
+    situation_analysis: Optional[SituationAnalysisResponse] = Field(default=None, description="Optional AI situation analysis context")
+    previous_reports: Optional[List['SituationReportResponse']] = Field(default=None, description="Optional list of previous reports for delta tracking")
 
 
 class SituationReportResponse(BaseModel):
@@ -334,6 +330,9 @@ class SituationReportResponse(BaseModel):
     title: str = Field(..., description="Title of the situation report")
     created_at: str = Field(..., description="Generation ISO timestamp")
 
+# model_rebuild is required here because SituationReportRequest has a forward reference 
+# to SituationReportResponse in the `previous_reports` field.
+SituationReportRequest.model_rebuild()
 
 class ChatWithContextRequest(BaseModel):
     messages: List[Dict[str, str]] = Field(..., description="The chat messages history list")
@@ -385,10 +384,4 @@ class RiskForecastRequest(BaseModel):
     damaged_critical_facilities: Optional[int] = Field(default=0, description="Damaged critical facilities")
     total_critical_facilities: Optional[int] = Field(default=0, description="Total critical facilities")
     risk_score: Optional[float] = Field(default=50.0, description="Composite risk score")
-    current_analysis: Optional[Dict[str, Any]] = Field(default=None, description="Optional active situation analysis context")
-
-
-
-
-
-
+    current_analysis: Optional[SituationAnalysisResponse] = Field(default=None, description="Optional active situation analysis context")

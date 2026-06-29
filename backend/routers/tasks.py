@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from typing import List, Optional
 from models.schemas import (
     TaskCreate, 
@@ -165,7 +165,7 @@ async def delete_task(
 @router.post("/{task_id}/subtasks", response_model=SubtaskResponse, status_code=status.HTTP_201_CREATED)
 async def add_manual_subtask(
     task_id: str,
-    title: str,
+    title: str = Body(..., embed=True),
     service: TaskService = Depends(get_task_service)
 ):
     """
