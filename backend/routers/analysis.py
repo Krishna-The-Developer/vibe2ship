@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
 from fastapi.responses import StreamingResponse
 import asyncio
-from backend.models.schemas import (
+from models.schemas import (
     TaskImpactRequest, 
     TaskImpactResponse, 
     ZoneDetail,
@@ -18,10 +18,10 @@ from backend.models.schemas import (
     RiskForecastRequest,
     RiskForecastResponse
 )
-from backend.services.impact_service import estimate_task_impact
-from backend.services.task_analysis_service import analyze_critical_tasks
-from backend.services.risk_scoring_service import calculate_risk_score
-from backend.services.gemini_service import GeminiService
+from services.impact_service import estimate_task_impact
+from services.task_analysis_service import analyze_critical_tasks
+from services.risk_scoring_service import calculate_risk_score
+from services.gemini_service import GeminiService
 import uuid
 
 gemini_service = GeminiService()

@@ -1,7 +1,7 @@
 import uuid
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
-from backend.models.schemas import TaskCreate, TaskUpdate, ScheduleCreate, ScheduleUpdate
+from models.schemas import TaskCreate, TaskUpdate, ScheduleCreate, ScheduleUpdate
 
 class TaskService:
     def __init__(self):

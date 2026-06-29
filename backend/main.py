@@ -33,18 +33,18 @@ app.add_middleware(
 )
 
 # 2. Custom Authentication Middleware - Skips all routes in PUBLIC_ROUTES
-from backend.middleware.auth import AuthMiddleware
+from middleware.auth import AuthMiddleware
 app.add_middleware(AuthMiddleware)
 
 # Import and Mount Routers
-from backend.routers.tasks import router as tasks_router
-from backend.routers.insights import router as insights_router
-from backend.routers.scheduler import router as scheduler_router
-from backend.routers.analysis import router as analysis_router
-from backend.routers.evacuation import router as evacuation_router
-from backend.routers.resources import router as resources_router
-from backend.routers.alerts import router as alerts_router
-from backend.routers.ai import router as ai_router
+from routers.tasks import router as tasks_router
+from routers.insights import router as insights_router
+from routers.scheduler import router as scheduler_router
+from routers.analysis import router as analysis_router
+from routers.evacuation import router as evacuation_router
+from routers.resources import router as resources_router
+from routers.alerts import router as alerts_router
+from routers.ai import router as ai_router
 
 # Prefix all routes for versioning and clarity
 app.include_router(tasks_router, prefix="/api")
@@ -60,7 +60,7 @@ app.include_router(ai_router, prefix="/api")
 # Safe Time Slots Engine Endpoint
 # ==========================================
 from datetime import datetime, timedelta
-from backend.models.schemas import SafeSlotsRequest, SafeSlotsResponse, SafeSlot
+from models.schemas import SafeSlotsRequest, SafeSlotsResponse, SafeSlot
 
 def generate_safe_slots(deadline_str: str) -> list:
     try:

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, status
-from backend.models.schemas import InsightBase, InsightResponse
-from backend.services.task_service import TaskService
-from backend.services.gemini_service import GeminiService
+from models.schemas import InsightBase, InsightResponse
+from services.task_service import TaskService
+from services.gemini_service import GeminiService
 
 router = APIRouter(
     prefix="/insights",
@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 # Reuse existing dependencies from tasks router
-from backend.routers.tasks import get_task_service, get_gemini_service
+from routers.tasks import get_task_service, get_gemini_service
 
 
 @router.get("/metrics")

@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List, Optional
-from backend.models.schemas import (
+from models.schemas import (
     TaskCreate, 
     TaskResponse, 
     TaskUpdate, 
     SubtaskResponse, 
     AIBreakdownRequest
 )
-from backend.services.task_service import TaskService
-from backend.services.gemini_service import GeminiService
+from services.task_service import TaskService
+from services.gemini_service import GeminiService
 
 router = APIRouter(
     prefix="/tasks",

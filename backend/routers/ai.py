@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
-from backend.models.schemas import ChatWithContextRequest, ChatWithContextResponse
-from backend.services.gemini_service import GeminiService
+from models.schemas import ChatWithContextRequest, ChatWithContextResponse
+from services.gemini_service import GeminiService
 
 router = APIRouter(tags=["AI Chat"])
 gemini_service = GeminiService()

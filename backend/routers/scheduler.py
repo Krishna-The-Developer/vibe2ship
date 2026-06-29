@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from backend.models.schemas import (
+from models.schemas import (
     ScheduleCreate, 
     ScheduleResponse, 
     ScheduleUpdate, 
     AIScheduleGenerationRequest
 )
-from backend.services.task_service import TaskService
-from backend.services.gemini_service import GeminiService
+from services.task_service import TaskService
+from services.gemini_service import GeminiService
 
 router = APIRouter(
     prefix="/scheduler",
@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 # Reuse existing dependencies
-from backend.routers.tasks import get_task_service, get_gemini_service
+from routers.tasks import get_task_service, get_gemini_service
 
 
 @router.get("/", response_model=List[ScheduleResponse])

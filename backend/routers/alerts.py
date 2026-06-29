@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from fastapi import APIRouter, status, HTTPException
-from backend.models.schemas import (
+from models.schemas import (
     AlertGenerateRequest,
     AlertResponse,
     AlertSeverityEnum
