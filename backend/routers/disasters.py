@@ -5,6 +5,7 @@ router = APIRouter()
 
 @router.get("/urgent-tasks")
 async def get_urgent_tasks():
+    """Public endpoint — no auth required."""
     try:
         async with httpx.AsyncClient(
             timeout=10.0
@@ -51,6 +52,7 @@ async def get_earthquakes(
     period: str = "week",
     minmagnitude: float = 2.5,
 ):
+    """Public endpoint — no auth required."""
     try:
         url = (
             "https://earthquake.usgs.gov"

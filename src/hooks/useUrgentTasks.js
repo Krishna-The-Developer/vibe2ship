@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getUrgentTasks } from '../services/apiService';
+import { api } from '../services/apiService';
 
 export function useUrgentTasks() {
   const [tasks, setTasks] = useState([]);
@@ -9,7 +9,7 @@ export function useUrgentTasks() {
   const fetchUrgentTasks = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getUrgentTasks();
+      const data = await api.getUrgentTasks();
       setTasks(data);
       setError(null);
     } catch (err) {

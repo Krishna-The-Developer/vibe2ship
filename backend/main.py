@@ -14,7 +14,7 @@ app = FastAPI(title="DIEP API")
 # ALLOWED_ORIGINS=https://your-app.vercel.app
 raw_origins = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:5173"
+    "http://localhost:5173,http://localhost:5174"
 )
 
 # Support comma-separated list of origins
@@ -24,14 +24,13 @@ ALLOWED_ORIGINS = [
 ]
 
 # Always include localhost for development
-ALLOWED_ORIGINS += [
+for default_origin in [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5173",
-]
-
-# Remove duplicates
-ALLOWED_ORIGINS = list(set(ALLOWED_ORIGINS))
+]:
+    if default_origin not in ALLOWED_ORIGINS:
+        ALLOWED_ORIGINS.append(default_origin)
 
 app.add_middleware(
     CORSMiddleware,
